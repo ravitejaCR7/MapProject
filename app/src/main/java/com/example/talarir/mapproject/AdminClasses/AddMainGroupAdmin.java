@@ -39,7 +39,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
         mFirebaseDatabase = mFirebaseInstance.getReference("MainGroup");
         saveToFireBaseButton= (Button) findViewById(R.id.btnAddMainGroupAdmin);
         theMainGroupNameEditText= (EditText) findViewById(R.id.editTextMainGroup);
-        recyclerMainView= (RecyclerView) findViewById(R.id.recyclerViewAdminMainAndSub);
+        recyclerMainView= (RecyclerView) findViewById(R.id.recyclerViewAdminMain);
         recyclerMainView.setHasFixedSize(true);
         recyclerMainView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -92,7 +92,9 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
                         // do whatever
                         TextView tv = (TextView) view.findViewById(R.id.textViewMainGroupAdmin);
                         Toast.makeText(getApplicationContext(),"simple "+tv.getText().toString(),Toast.LENGTH_SHORT).show();
-                        Intent subCategoryIntent= new Intent(this,)
+                        Intent subCategoryIntent= new Intent(getApplicationContext(),AddSubGroupAdmin.class);
+                        subCategoryIntent.putExtra("MainSelectedString",tv.getText().toString());
+                        startActivity(subCategoryIntent);
                     }
 
                     @Override public void onLongItemClick(View view, int position)

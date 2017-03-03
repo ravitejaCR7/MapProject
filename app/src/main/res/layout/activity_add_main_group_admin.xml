@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/upperLinerLayout">
+        android:id="@+id/upperLinerLayoutMainAdmin">
 
         <EditText
             android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_below="@id/upperLinerLayout"
+        android:layout_below="@id/upperLinerLayoutMainAdmin"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            android:id="@+id/recyclerViewAdminMainAndSub"
+            android:id="@+id/recyclerViewAdminMain"
             />
     </LinearLayout>
 
