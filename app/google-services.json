@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "397187882359",
+    "firebase_url": "https://mapproject-1487255169655.firebaseio.com",
+    "project_id": "mapproject-1487255169655",
+    "storage_bucket": "mapproject-1487255169655.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397187882359:android:55af8fef4a0e5368",
+        "android_client_info": {
+          "package_name": "com.example.talarir.mapproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397187882359-9o88qqi4brnu4ihvki2hole0j6rf5do1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.talarir.mapproject",
+            "certificate_hash": "51FA64090B6186E06C5D7115E3E69F100E591C24"
+          }
+        },
+        {
+          "client_id": "397187882359-eaug7m52kl53h14heuj9nkuq4n9p8jlf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJjFgDsXiacfc9K0Rs2GgDQVXeGGzbPDw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397187882359-eaug7m52kl53h14heuj9nkuq4n9p8jlf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
