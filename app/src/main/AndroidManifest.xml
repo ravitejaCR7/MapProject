@@ -27,7 +27,6 @@
         <activity android:name=".NonAdminACtivity" />
         <activity android:name=".AdminClasses.AddMainGroupAdmin" />
         <activity android:name=".AdminClasses.AddSubGroupAdmin" />
-        <activity android:name=".Sample"></activity>
     </application>
 
 </manifest>

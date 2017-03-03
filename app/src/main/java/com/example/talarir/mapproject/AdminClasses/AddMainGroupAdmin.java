@@ -11,18 +11,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.talarir.mapproject.NonAdminACtivity;
-import com.example.talarir.mapproject.NonAdminClasses.RecyclerDataGetSetCLass;
 import com.example.talarir.mapproject.R;
-import com.example.talarir.mapproject.Sample;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
 
 public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClickListener
 {
@@ -97,6 +92,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
                         // do whatever
                         TextView tv = (TextView) view.findViewById(R.id.textViewMainGroupAdmin);
                         Toast.makeText(getApplicationContext(),"simple "+tv.getText().toString(),Toast.LENGTH_SHORT).show();
+                        Intent subCategoryIntent= new Intent(this,)
                     }
 
                     @Override public void onLongItemClick(View view, int position)
