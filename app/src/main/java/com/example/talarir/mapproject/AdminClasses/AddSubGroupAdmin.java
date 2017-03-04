@@ -23,10 +23,10 @@ import java.util.Map;
 
 public class AddSubGroupAdmin extends AppCompatActivity
 {
+    String mainGroupSelected;
 
-
-    private DatabaseReference mFirebaseDatabaseSub;
-    private FirebaseDatabase mFirebaseInstanceSub;
+    private DatabaseReference mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseInstance;
 
 
     @Override
@@ -34,7 +34,29 @@ public class AddSubGroupAdmin extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_sub_group_admin);
 
-        //mFirebaseInstance = FirebaseDatabase.getInstance();
-        //mFirebaseDatabase = mFirebaseInstance.getReference("SubGroup");
+        mainGroupSelected=getIntent().getStringExtra("MainSelectedString");
+        Toast.makeText(this,"main : "+mainGroupSelected,Toast.LENGTH_SHORT).show();
+        mFirebaseInstance = FirebaseDatabase.getInstance();
+        mFirebaseDatabase = mFirebaseInstance.getReference("MainGroup");
+        ValueEventListener x=mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    if (mainGroupSelected.equals(dataSnapshot1.getValue()))
+                    {
+                        Toast.makeText(getApplicationContext(),"key : "+dataSnapshot1.getKey()+"   value : "+dataSnapshot1.getValue(),Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+        //mFirebaseDatabase.removeEventListener(x);
     }
 }

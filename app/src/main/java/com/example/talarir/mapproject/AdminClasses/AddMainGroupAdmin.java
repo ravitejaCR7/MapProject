@@ -107,23 +107,14 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
 
     }
 
-    public void createNewMainGroup(String theMainGroupNameEditText)
-    {
-        mFirebaseInstance = FirebaseDatabase.getInstance();
-        mFirebaseDatabase = mFirebaseInstance.getReference("MainGroup");
-
-        mFirebaseDatabase.push().setValue(theMainGroupNameEditText.toLowerCase());
-
-    }
-
     @Override
     public void onClick(View v)
     {
         if (v.getId()==R.id.btnAddMainGroupAdmin )
         {
-            if (theMainGroupNameEditText.getText().toString().length()>0 )
+            if (theMainGroupNameEditText.getText().toString().length()>0 && (!theMainGroupNameEditText.getText().equals("")) && theMainGroupNameEditText.getText().toString()!=null)
             {
-                    getTheMainListForUniqueness(theMainGroupNameEditText.getText().toString());
+                    getTheMainListForUniqueness(theMainGroupNameEditText.getText().toString().toLowerCase().trim());
             }
             else
             {
@@ -136,7 +127,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
     {
         mFirebaseInstance = FirebaseDatabase.getInstance();
         mFirebaseDatabase = mFirebaseInstance.getReference("MainGroup");
-        mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
+        ValueEventListener x=mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
@@ -156,13 +147,13 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
                     }
                     else
                     {
-                        createNewMainGroup(theMainGroupNameEditText.getText().toString());
+                        createNewMainGroup(s);
                         theMainGroupNameEditText.setText("");
                     }
                 }
                 else
                 {
-                    createNewMainGroup(theMainGroupNameEditText.getText().toString());
+                    createNewMainGroup(s);
                     theMainGroupNameEditText.setText("");
                 }
             }
@@ -172,5 +163,21 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
 
             }
         });
+        //mFirebaseDatabase.removeEventListener(x);
+    }
+    public void createNewMainGroup(String theMainGroupNameEditText)
+    {
+        mFirebaseInstance = FirebaseDatabase.getInstance();
+        mFirebaseDatabase = mFirebaseInstance.getReference("MainGroup");
+
+        if (theMainGroupNameEditText.equals("")||theMainGroupNameEditText.length()<=0)
+        {
+            Toast.makeText(getApplicationContext(),"woah",Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            mFirebaseDatabase.push().setValue(theMainGroupNameEditText.toLowerCase());
+        }
+
     }
 }
