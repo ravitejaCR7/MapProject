@@ -29,6 +29,8 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
 
+    ValueEventListener x;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -58,7 +60,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
 
         public void setMainGroupName(String mainGroupName)
         {
-            TextView textView= (TextView) mView.findViewById(R.id.textViewMainGroupAdmin);
+            TextView textView= (TextView) mView.findViewById(R.id.textViewMainGroupAdminRecyclerList);
             textView.setText(mainGroupName);
         }
     }
@@ -90,7 +92,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
                     @Override public void onItemClick(View view, int position)
                     {
                         // do whatever
-                        TextView tv = (TextView) view.findViewById(R.id.textViewMainGroupAdmin);
+                        TextView tv = (TextView) view.findViewById(R.id.textViewMainGroupAdminRecyclerList);
                         Toast.makeText(getApplicationContext(),"simple "+tv.getText().toString(),Toast.LENGTH_SHORT).show();
                         Intent subCategoryIntent= new Intent(getApplicationContext(),AddSubGroupAdmin.class);
                         subCategoryIntent.putExtra("MainSelectedString",tv.getText().toString());
@@ -127,7 +129,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
     {
         mFirebaseInstance = FirebaseDatabase.getInstance();
         mFirebaseDatabase = mFirebaseInstance.getReference("MainGroup");
-        ValueEventListener x=mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
+        x=mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
@@ -156,6 +158,8 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
                     createNewMainGroup(s);
                     theMainGroupNameEditText.setText("");
                 }
+
+                cancelConnection();
             }
 
             @Override
@@ -163,7 +167,12 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
 
             }
         });
-        //mFirebaseDatabase.removeEventListener(x);
+
+    }
+
+    public void cancelConnection()
+    {
+        mFirebaseDatabase.removeEventListener(x);
     }
     public void createNewMainGroup(String theMainGroupNameEditText)
     {
