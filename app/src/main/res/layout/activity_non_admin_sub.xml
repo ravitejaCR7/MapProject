@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_non_admin_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.talarir.mapproject.NonAdminACtivity">
+    tools:context="com.example.talarir.mapproject.NonAdminClasses.NonAdminSubActivity">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:id="@+id/recyclerViewNonAdminMain"
+        android:id="@+id/subNonAdminRecycler"
         />
+
 </RelativeLayout>

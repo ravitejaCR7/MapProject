@@ -20,7 +20,7 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
     public FirebaseAuth mAuth;
     public FirebaseAuth.AuthStateListener mAuthListener;
 
-    Button buttonSaveMainGroup,buttonSaveSubGroup;
+    Button buttonSaveMainGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -58,10 +58,9 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
     private void initializeButton()
     {
         buttonSaveMainGroup= (Button) findViewById(R.id.addMainGroupAdmin);
-        buttonSaveSubGroup= (Button) findViewById(R.id.addSubGroupAdmin);
 
         buttonSaveMainGroup.setOnClickListener(this);
-        buttonSaveSubGroup.setOnClickListener(this);
+
     }
 
 
@@ -92,10 +91,6 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
         if (v.getId()==R.id.addMainGroupAdmin)
         {
             startActivity(new Intent(this, AddMainGroupAdmin.class));
-        }
-        if (v.getId()==R.id.addSubGroupAdmin)
-        {
-            Toast.makeText(this,"subgroup",Toast.LENGTH_SHORT).show();
         }
     }
 }

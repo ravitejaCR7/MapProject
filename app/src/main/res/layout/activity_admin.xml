@@ -24,12 +24,7 @@
             android:layout_marginLeft="40dp"
             android:id="@+id/addMainGroupAdmin" />
 
-        <Button
-            android:text="sub"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:id="@+id/addSubGroupAdmin" />
+
 
     </LinearLayout>
 </RelativeLayout>

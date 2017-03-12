@@ -3,12 +3,20 @@ package com.example.talarir.mapproject;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.talarir.mapproject.AdminClasses.AddMainGroupAdmin;
+import com.example.talarir.mapproject.AdminClasses.AddSubGroupAdmin;
+import com.example.talarir.mapproject.AdminClasses.RecyclerItemClickListener;
+import com.example.talarir.mapproject.NonAdminClasses.MapActivty;
+import com.example.talarir.mapproject.NonAdminClasses.NonAdminSubActivity;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,7 +29,7 @@ public class NonAdminACtivity extends AppCompatActivity
 {
 
     RecyclerView nonAdminMainRecyclerView;
-    FrameLayout frameLayout;
+
 
     private DatabaseReference mFirebaseDatabaseNonAdmin;
     private FirebaseDatabase mFirebaseInstanceNonAdmin;
@@ -32,96 +40,73 @@ public class NonAdminACtivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_non_admin_activity);
 
-
+        mFirebaseInstanceNonAdmin = FirebaseDatabase.getInstance();
+        mFirebaseDatabaseNonAdmin = mFirebaseInstanceNonAdmin.getReference("MainGroup");
         initializeView();
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null)
-        {
-            // User is signed in
-            checkThePresentUsers(user.getUid());
-
-        }
-        else
-        {
-            // No user is signed in
-            Toast.makeText(this,"Sorry. Try logging in",Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this,LoginActivity.class));
-        }
-
     }
 
     private void initializeView()
     {
-        nonAdminMainRecyclerView = (RecyclerView) findViewById(R.id.nonAdminRecyclerViewMainGroup);
-        frameLayout= (FrameLayout) findViewById(R.id.frameLayoutNonAdmin);
+        nonAdminMainRecyclerView= (RecyclerView) findViewById(R.id.recyclerViewNonAdminMain);
+        nonAdminMainRecyclerView.setHasFixedSize(true);
+        nonAdminMainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void checkThePresentUsers(final String uid)
+    @Override
+    protected void onStart()
     {
+        super.onStart();
 
-        mFirebaseInstanceNonAdmin = FirebaseDatabase.getInstance();
-        mFirebaseDatabaseNonAdmin = mFirebaseInstanceNonAdmin.getReference("UsersList");
-        mFirebaseDatabaseNonAdmin.addValueEventListener(new ValueEventListener() {
+        FirebaseRecyclerAdapter<String,RecyclerMainGroupViewHolder> firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<String, RecyclerMainGroupViewHolder>(
+                String.class,
+                R.layout.each_main_element_admin,
+                RecyclerMainGroupViewHolder.class,
+                mFirebaseDatabaseNonAdmin
+        ) {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
+            protected void populateViewHolder(RecyclerMainGroupViewHolder viewHolder, String model, int position)
             {
-                if (dataSnapshot.getChildrenCount()<=0)
-                {
-                    addUserToFirebase(uid);
-                }
-                if (dataSnapshot.getChildrenCount()>=0)
-                {
-                    int counter=0;
-                    for (DataSnapshot datasnap1 : dataSnapshot.getChildren())
-                    {
-                        if (uid.equals(datasnap1.getKey()))
-                        {
-                            counter++;
-                        }
-                    }
-                    if (counter>0)
-                    {
-                        showTheNonAdminRecyclerMainList();
-                    }
-                    else if (counter==0)
-                    {
-                        addUserToFirebase(uid);
-                    }
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                viewHolder.setMainGroupName(model);
 
             }
-        });
+        };
+
+        nonAdminMainRecyclerView.setAdapter(firebaseRecyclerAdapter);
+
+        nonAdminMainRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getApplicationContext(), nonAdminMainRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position)
+                    {
+                        // do whatever
+                        TextView tv = (TextView) view.findViewById(R.id.textViewMainGroupAdminRecyclerList);
+                        Toast.makeText(getApplicationContext(),"simple "+tv.getText().toString(),Toast.LENGTH_SHORT).show();
+                        Intent subCategoryIntent= new Intent(getApplicationContext(),NonAdminSubActivity.class);
+                        subCategoryIntent.putExtra("MainSelectedStringNonActivity",tv.getText().toString());
+                        startActivity(subCategoryIntent);
+                    }
+
+                    @Override public void onLongItemClick(View view, int position)
+                    {
+                        // do whatever
+                        Toast.makeText(getApplicationContext(),"long",Toast.LENGTH_SHORT).show();
+                    }
+                })
+        );
     }
 
-    private void showTheNonAdminRecyclerMainList()
+    public static class RecyclerMainGroupViewHolder extends RecyclerView.ViewHolder
     {
+        View mView;
+        public RecyclerMainGroupViewHolder(View itemView) {
+            super(itemView);
+            mView=itemView;
+        }
 
-    }
-
-    private void addUserToFirebase(String userId)
-    {
-        showFrameLayout(frameLayout);
-        takeTheLocationInputs();
-        hideFrameLayout(frameLayout);
-    }
-
-    private void hideFrameLayout(FrameLayout frameLayout)
-    {
-        frameLayout.setVisibility(View.GONE);
-    }
-
-    private void takeTheLocationInputs()
-    {
-
-    }
-
-    private void showFrameLayout(FrameLayout frameLayout)
-    {
-        frameLayout.setVisibility(View.VISIBLE);
+        public void setMainGroupName(String mainGroupName)
+        {
+            TextView textView= (TextView) mView.findViewById(R.id.textViewMainGroupAdminRecyclerList);
+            textView.setText(mainGroupName);
+        }
     }
 }
