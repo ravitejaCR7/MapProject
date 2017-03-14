@@ -246,6 +246,7 @@ public class MapActivty extends AppCompatActivity implements
         Toast.makeText(this, "hmm : " + mCurrentLocation.getLongitude() + " " + mCurrentLocation.getLatitude(), Toast.LENGTH_SHORT).show();
         userLocationFireBaseAdd();
         stopLocationUpdates();
+        finish();
 
     }
 
