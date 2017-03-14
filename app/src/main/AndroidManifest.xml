@@ -39,7 +39,8 @@
         <activity android:name=".AdminClasses.AddMainGroupAdmin" />
         <activity android:name=".AdminClasses.AddSubGroupAdmin" />
         <activity android:name=".NonAdminClasses.MapActivty" />
-        <activity android:name=".NonAdminClasses.NonAdminSubActivity"></activity>
+        <activity android:name=".NonAdminClasses.NonAdminSubActivity" />
+        <activity android:name=".NonAdminClasses.SubMapActivity"></activity>
     </application>
 
 </manifest>

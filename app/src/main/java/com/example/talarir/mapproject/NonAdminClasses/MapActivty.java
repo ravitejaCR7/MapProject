@@ -207,21 +207,7 @@ public class MapActivty extends AppCompatActivity implements
                     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
 
-        }
-        /*
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
-            switch (requestCode) {
-                //Location
-                case 1:
-                    askForGPS();
-                    break;
-            }
-
-            Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
-        }*/
+    }
 
     private void askForGPS() {
         mLocationRequest = LocationRequest.create();
@@ -251,16 +237,16 @@ public class MapActivty extends AppCompatActivity implements
     }
 
 
-    private void initializeView() {
+    private void initializeView()
+    {
         saveTheLocationBtnNonAdmin = (Button) findViewById(R.id.buttonSaveLocationNonAdmin);
-
     }
 
     public void onClickTheSaveLocationButton(View view) {
         Toast.makeText(this, "hmm : " + mCurrentLocation.getLongitude() + " " + mCurrentLocation.getLatitude(), Toast.LENGTH_SHORT).show();
-        //updateUI();
         userLocationFireBaseAdd();
         stopLocationUpdates();
+
     }
 
     private void userLocationFireBaseAdd()
