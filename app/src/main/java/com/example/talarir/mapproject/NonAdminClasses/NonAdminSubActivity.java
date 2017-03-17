@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class NonAdminSubActivity extends AppCompatActivity implements SubDialogToActivityInterface
@@ -28,14 +29,17 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
     RecyclerView rec;
 
     private String mainGroupSelected;
-    private static String mainGroupSelectedKey;
+    private static String mainGroupSelectedKey,subGroupSelectedKey;
 
-    private ValueEventListener xSub,xSub1;
+    private ValueEventListener xMain,xSub1,xSub,xSubscription;
 
     FirebaseUser user;
 
     private DatabaseReference mFirebaseDatabaseNonAdminMain;
     private FirebaseDatabase mFirebaseInstanceNonAdminMain;
+
+    private DatabaseReference mFirebaseDatabaseNonAdminSub;
+    private FirebaseDatabase mFirebaseInstanceNonAdminSub;
 
     private DatabaseReference mFirebaseDatabaseSub1;
     private FirebaseDatabase mFirebaseInstanceSub1;
@@ -43,6 +47,11 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
     private DatabaseReference mFirebaseDatabaseForUser;
     private FirebaseDatabase mFirebaseInstanceForUser;
 
+    private DatabaseReference mFirebaseDatabaseSubscription;
+    private FirebaseDatabase mFirebaseInstanceSubscription;
+
+    private DatabaseReference mFirebaseDatabaseSubscriptionAddition;
+    private FirebaseDatabase mFirebaseInstanceSubscriptionAddition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -61,7 +70,7 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
         mainGroupSelected=getIntent().getStringExtra("MainSelectedStringNonActivity");
         mFirebaseInstanceNonAdminMain = FirebaseDatabase.getInstance();
         mFirebaseDatabaseNonAdminMain = mFirebaseInstanceNonAdminMain.getReference("MainGroup");
-        xSub=mFirebaseDatabaseNonAdminMain.addValueEventListener(new ValueEventListener()
+        xMain=mFirebaseDatabaseNonAdminMain.addValueEventListener(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
@@ -70,7 +79,7 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
                 {
                     if (mainGroupSelected.equals(dataSnapshot1.getValue()))
                     {
-                        Toast.makeText(getApplicationContext(),"key : "+dataSnapshot1.getKey()+"   value : "+dataSnapshot1.getValue(),Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),"key : "+dataSnapshot1.getKey()+"   value : "+dataSnapshot1.getValue(),Toast.LENGTH_SHORT).show();
                         mainGroupSelectedKey=dataSnapshot1.getKey();
                     }
                 }
@@ -78,7 +87,38 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
                 {
                     recyclerPopulate();
                 }
-                cancelConnection();
+                cancelConnectionMainString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+    }
+
+    private void getTheSubGroupSelectedKey(final String subViewSelectedString)
+    {
+        mFirebaseInstanceNonAdminSub = FirebaseDatabase.getInstance();
+        mFirebaseDatabaseNonAdminSub = mFirebaseInstanceNonAdminSub.getReference("SubGroup/"+mainGroupSelectedKey);
+        xSub=mFirebaseDatabaseNonAdminSub.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+
+                   for (DataSnapshot list : dataSnapshot.getChildren())
+                   {
+                       if (subViewSelectedString.equals(list.getValue()))
+                       {
+                           subGroupSelectedKey=list.getKey();
+                       }
+                   }
+                   if (subGroupSelectedKey==null)
+                   {
+                       Toast.makeText(getApplicationContext(),"ERROR!!",Toast.LENGTH_SHORT).show();
+                   }
+                   cancelConnectionSubString();
             }
 
             @Override
@@ -118,10 +158,12 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
                     {
                         // do whatever
                         TextView tv = (TextView) view.findViewById(R.id.textViewSubGroupAdminRecyclerList);
-                        Toast.makeText(getApplicationContext(),"sub lo "+tv.getText().toString(),Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),"sub lo "+tv.getText().toString(),Toast.LENGTH_SHORT).show();
                         user = FirebaseAuth.getInstance().getCurrentUser();
                         if (user!=null)
                         {
+                            getTheSubGroupSelectedKey(tv.getText().toString());
+                            //this checking must be done prior to populating the main category list (but first check that GPS error)
                             checkForUser(user.getUid());
                         }
                         else
@@ -164,14 +206,9 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
                 if (counter>0)
                 {
                     //user present so call the main MAP activity
-                    Toast.makeText(getApplicationContext(),"user already exists",Toast.LENGTH_SHORT).show();
-                    //the dialog fragment must be non-cancellabe
-                    FragmentManager subDialogFragmentManager=getFragmentManager();
-                    SubMapDialogue subMapDialogue=new SubMapDialogue();
-                    subMapDialogue.show(subDialogFragmentManager,"Dialog Fragment");
-                    //if selected accept in dialog fragment
-                    // Intent subMapGroupIntent=new Intent(getApplicationContext(),SubMapActivity.class);
-                    //if selected decline, then just dismiss()***
+                    //Toast.makeText(getApplicationContext(),"user already exists",Toast.LENGTH_SHORT).show();
+                    walkThroughSubscriptionList();
+
 
                 }
                 else if (counter == 0)
@@ -190,6 +227,74 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
         });
     }
 
+    private void walkThroughSubscriptionList()
+    {
+        mFirebaseInstanceSubscription = FirebaseDatabase.getInstance();
+        mFirebaseDatabaseSubscription = mFirebaseInstanceSubscription.getReference("SubscriptionList/"+mainGroupSelectedKey+"/"+subGroupSelectedKey);
+        xSubscription=mFirebaseDatabaseSubscription.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                int counter=0;
+
+                if (dataSnapshot.getChildrenCount()>0)
+                {
+                    for (DataSnapshot childList : dataSnapshot.getChildren())
+                    {
+                        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(childList.getValue()))
+                        {
+                            counter++;
+                        }
+                    }
+                    if (counter>0)
+                    {
+                        Intent subMapActivity=new Intent(getApplicationContext(),SubMapActivity.class);
+                        subMapActivity.putExtra("MainGroupIntentString",mainGroupSelectedKey);
+                        subMapActivity.putExtra("SubGroupIntentString",subGroupSelectedKey);
+                        startActivity(subMapActivity);
+                    }
+                    else if (counter==0)
+                    {
+                        //the dialog fragment must be non-cancellabe
+                        FragmentManager subDialogFragmentManager=getFragmentManager();
+                        SubMapDialogue subMapDialogue=new SubMapDialogue();
+                        subMapDialogue.show(subDialogFragmentManager,"Dialog Fragment");
+                        //if selected accept in dialog fragment
+                        // Intent subMapGroupIntent=new Intent(getApplicationContext(),SubMapActivity.class);
+                        //if selected decline, then just dismiss()***
+                    }
+
+                }
+                else
+                {
+                    //the dialog fragment must be non-cancellabe
+                    FragmentManager subDialogFragmentManager=getFragmentManager();
+                    SubMapDialogue subMapDialogue=new SubMapDialogue();
+                    subMapDialogue.show(subDialogFragmentManager,"Dialog Fragment");
+                    //if selected accept in dialog fragment
+                    // Intent subMapGroupIntent=new Intent(getApplicationContext(),SubMapActivity.class);
+                    //if selected decline, then just dismiss()***
+                }
+
+                cancelConnectionSubscription();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void addToTheSubscriptionList()
+    {
+        mFirebaseInstanceSubscriptionAddition = FirebaseDatabase.getInstance();
+        mFirebaseDatabaseSubscriptionAddition = mFirebaseInstanceSubscriptionAddition.getReference("SubscriptionList/"+mainGroupSelectedKey+"/"+subGroupSelectedKey);
+        mFirebaseDatabaseSubscriptionAddition.push().setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+    }
+
+
     public static class RecyclerSubGroupViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
@@ -207,13 +312,21 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
 
 
 
-    private void cancelConnection()
+    private void cancelConnectionMainString()
     {
-        mFirebaseDatabaseNonAdminMain.removeEventListener(xSub);
+        mFirebaseDatabaseNonAdminMain.removeEventListener(xMain);
     }
     private void cancelConnection1()
     {
-        mFirebaseDatabaseNonAdminMain.removeEventListener(xSub1);
+        mFirebaseDatabaseForUser.removeEventListener(xSub1);
+    }
+    private void cancelConnectionSubscription()
+    {
+        mFirebaseDatabaseSubscription.removeEventListener(xSubscription);
+    }
+    private void cancelConnectionSubString()
+    {
+        mFirebaseDatabaseNonAdminSub.removeEventListener(xSub);
     }
 
     private void initializeView()
@@ -229,6 +342,12 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
         if (flag)
         {
             Toast.makeText(this,"true",Toast.LENGTH_SHORT).show();
+            addToTheSubscriptionList();
+            Intent subMapActivity=new Intent(getApplicationContext(),SubMapActivity.class);
+            subMapActivity.putExtra("MainGroupIntentString",mainGroupSelectedKey);
+            subMapActivity.putExtra("SubGroupIntentString",subGroupSelectedKey);
+            startActivity(subMapActivity);
+
 
         }
         else if (!flag)
