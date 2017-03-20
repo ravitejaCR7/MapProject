@@ -1,54 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_login"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:id="@+id/activity_login"
+xmlns:tools="http://schemas.android.com/tools"
+android:fitsSystemWindows="true"
+android:background="@drawable/bluredbackground"
+tools:context="com.example.talarir.mapproject.LoginActivity">
+
+<LinearLayout
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.talarir.mapproject.LoginActivity">
+    android:layout_height="wrap_content"
+    android:paddingTop="56dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
-    <EditText
+    <ImageView android:src="@drawable/ead_logo_material"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint="Email-ID"
-        android:ems="10"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="68dp"
-        android:id="@+id/emailLoginEt" />
+        android:layout_height="72dp"
+        android:layout_marginBottom="24dp"
+        android:layout_gravity="center_horizontal" />
 
-    <EditText
-        android:layout_width="wrap_content"
+    <!-- Email Label -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="password"
-        android:ems="10"
-        android:layout_below="@+id/emailLoginEt"
-        android:layout_alignStart="@+id/emailLoginEt"
-        android:layout_marginTop="67dp"
-        android:id="@+id/passwordLoginEt" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="Email"
+            android:id="@+id/emailLoginEt" />
+    </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:text="LOGIN"
-        android:layout_width="wrap_content"
+    <!-- Password Label -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="67dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="Password"
+            android:id="@+id/passwordLoginEt" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/loginBtn"
-        android:layout_below="@+id/passwordLoginEt"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:padding="12dp"
+        android:text="Login"/>
 
     <Button
-        android:text="SignUp?"
-        android:layout_width="wrap_content"
+        android:text="No account yet? Create one?"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@null"
-        android:layout_alignStart="@+id/loginBtn"
-        android:layout_marginBottom="37dp"
-        android:id="@+id/signUpBtn" />
-</RelativeLayout>
+        android:id="@+id/signUpBtn"
+        android:gravity="center"
+        android:textSize="16dip"
+        android:layout_marginBottom="24dp"/>
+
+
+</LinearLayout>
+</ScrollView>

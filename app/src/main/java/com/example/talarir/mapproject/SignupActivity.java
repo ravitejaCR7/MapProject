@@ -1,5 +1,6 @@
 package com.example.talarir.mapproject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ public class SignupActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     EditText signUpEmail,signUpPassword;
     Button backToLoginButton,signUpButton;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,27 +35,36 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"Welcome Home",Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                finish();
             }
         });
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
+                signUpButton.setEnabled(false);
+                showProgressBar();
                 String email = signUpEmail.getText().toString().trim();
                 String password = signUpPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
+                    cancelProgressBar();
                     Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    signUpButton.setEnabled(true);
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
+                    cancelProgressBar();
                     Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                    signUpButton.setEnabled(true);
                     return;
                 }
 
                 if (password.length() < 6) {
+                    cancelProgressBar();
                     Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
+                    signUpButton.setEnabled(true);
                     return;
                 }
                 //create user
@@ -63,8 +74,10 @@ public class SignupActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 Toast.makeText(SignupActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                                 if (!task.isSuccessful()) {
+                                    cancelProgressBar();
                                     Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
+                                    signUpButton.setEnabled(true);
                                 } else {
                                     Toast.makeText(SignupActivity.this, "Kindly Login!.",
                                             Toast.LENGTH_SHORT).show();
@@ -85,5 +98,22 @@ public class SignupActivity extends AppCompatActivity {
         signUpPassword=(EditText)findViewById(R.id.editTextSignUpPassword);
         backToLoginButton=(Button)findViewById(R.id.backToLoginActivityBtn);
         signUpButton=(Button)findViewById(R.id.registerSignUpActivityBtn);
+    }
+    public void showProgressBar()
+    {
+        progressDialog = new ProgressDialog(SignupActivity.this,
+                R.style.MyTheme);
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+        progressDialog.setMessage("Welcome lads...");
+        progressDialog.show();
+
+    }
+
+
+    public void cancelProgressBar()
+    {
+        progressDialog.dismiss();
+
     }
 }
