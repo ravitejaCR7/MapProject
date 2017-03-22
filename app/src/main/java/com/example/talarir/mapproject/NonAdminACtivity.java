@@ -6,28 +6,17 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.talarir.mapproject.AdminClasses.AddMainGroupAdmin;
-import com.example.talarir.mapproject.AdminClasses.AddSubGroupAdmin;
 import com.example.talarir.mapproject.AdminClasses.RecyclerItemClickListener;
-import com.example.talarir.mapproject.NonAdminClasses.MapActivty;
 import com.example.talarir.mapproject.NonAdminClasses.NonAdminSubActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class NonAdminACtivity extends AppCompatActivity
 {
-
     RecyclerView nonAdminMainRecyclerView;
 
 
@@ -43,6 +32,7 @@ public class NonAdminACtivity extends AppCompatActivity
         mFirebaseInstanceNonAdmin = FirebaseDatabase.getInstance();
         mFirebaseDatabaseNonAdmin = mFirebaseInstanceNonAdmin.getReference("MainGroup");
         initializeView();
+
     }
 
     private void initializeView()
