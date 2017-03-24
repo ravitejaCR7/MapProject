@@ -24,7 +24,5 @@
             android:layout_marginLeft="40dp"
             android:id="@+id/addMainGroupAdmin" />
 
-
-
     </LinearLayout>
 </RelativeLayout>

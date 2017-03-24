@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_non_admin_activity"
-    android:layout_width="match_parent"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.talarir.mapproject.NonAdminACtivity">
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true">
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
+    <include layout="@layout/include_non_admin_main_list_viewpager"/>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:id="@+id/recyclerViewNonAdminMain"
-        />
-</RelativeLayout>
+        android:layout_width="wrap_content"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/non_admin_nav_header"
+        app:menu="@menu/non_admin_navigation_drawer_view"/>
+
+</android.support.v4.widget.DrawerLayout>

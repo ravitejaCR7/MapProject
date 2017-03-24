@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.talarir.mapproject">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -28,7 +29,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCPuSgZqw6OrnOUXMs39ePgAi5t3QKalGg" />
 
-        <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,7 +38,8 @@
         </activity>
         <activity android:name=".SignupActivity" />
         <activity android:name=".AdminActivity" />
-        <activity android:name=".NonAdminACtivity" />
+        <activity android:name=".NonAdminACtivity"
+            android:theme="@style/AppThemeMaterial"/>
         <activity android:name=".AdminClasses.AddMainGroupAdmin" />
         <activity android:name=".AdminClasses.AddSubGroupAdmin" />
         <activity android:name=".NonAdminClasses.MapActivty" />
