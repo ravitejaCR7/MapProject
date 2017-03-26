@@ -1,9 +1,15 @@
 package com.example.talarir.mapproject.AdminClasses;
 
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,18 +17,28 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.talarir.mapproject.R;
+import com.example.talarir.mapproject.Upload;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,29 +58,33 @@ public class AddSubGroupAdmin extends AppCompatActivity implements View.OnClickL
     ValueEventListener xSub;
 
     private EditText theSubGroupNameEditText;
-    private Button saveToFireBaseButtonSub;
+    private Button saveToFireBaseButtonSub,chooseImageSubAdminButton;
     private RecyclerView recyclerSubView;
+
+    private static final int PICK_IMAGE_REQUEST_SUB = 300;
+    private int imageSubFlag=0;
+    private Uri filePathSubAdmin;
+    private ImageView subAdminImageView;
+    private StorageReference mStorageRefMainAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_sub_group_admin);
 
+        mStorageRefMainAdmin = FirebaseStorage.getInstance().getReference();
+
         mainGroupSelectedKey=null;
-
-        initializeViewInCreate();
-
         getTheMainGroupSelectedKey();
-    }
 
-
-    private void initializeViewInCreate()
-    {
+        subAdminImageView = (ImageView) findViewById(R.id.imageViewSubAdmin);
         theSubGroupNameEditText= (EditText) findViewById(R.id.editTextSubGroup);
         saveToFireBaseButtonSub= (Button) findViewById(R.id.btnAddSubGroupAdmin);
+        chooseImageSubAdminButton= (Button) findViewById(R.id.btnAddImageSubGroupAdmin);
         recyclerSubView= (RecyclerView) findViewById(R.id.recyclerViewAdminSub);
         recyclerSubView.setHasFixedSize(true);
-        recyclerSubView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerSubView.setLayoutManager(new GridLayoutManager(this,2));
+
     }
 
     private void getTheMainGroupSelectedKey()
@@ -79,7 +99,9 @@ public class AddSubGroupAdmin extends AppCompatActivity implements View.OnClickL
             {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
-                    if (mainGroupSelected.equals(dataSnapshot1.getValue()))
+                    Upload retrievingMainUploadObject = dataSnapshot1.getValue(Upload.class);
+
+                    if (mainGroupSelected.equals(retrievingMainUploadObject.getName()))
                     {
                         Toast.makeText(getApplicationContext(),"key : "+dataSnapshot1.getKey()+"   value : "+dataSnapshot1.getValue(),Toast.LENGTH_SHORT).show();
                         mainGroupSelectedKey=dataSnapshot1.getKey();
@@ -104,6 +126,7 @@ public class AddSubGroupAdmin extends AppCompatActivity implements View.OnClickL
     private void setTheSaveButtonListener()
     {
         saveToFireBaseButtonSub.setOnClickListener(this);
+        chooseImageSubAdminButton.setOnClickListener(this);
     }
 
 
@@ -134,6 +157,10 @@ public class AddSubGroupAdmin extends AppCompatActivity implements View.OnClickL
             }
 
         }
+        if (v==chooseImageSubAdminButton)
+        {
+            startImagesIntentSubAdmin();
+        }
     }
 
     private void getTheSubListForUniqueness(final String s)
@@ -149,7 +176,8 @@ public class AddSubGroupAdmin extends AppCompatActivity implements View.OnClickL
                 {
                     for ( DataSnapshot da : dataSnapshot.getChildren())
                     {
-                        if (s.equals(da.getValue()))
+                        Upload retrievingSubUploadObject = da.getValue(Upload.class);
+                        if (s.equals(retrievingSubUploadObject.getName()))
                         {
                             counter++;
                         }
@@ -181,7 +209,7 @@ public class AddSubGroupAdmin extends AppCompatActivity implements View.OnClickL
 
     }
 
-    public void createNewSubGroup(String theSubGroupNameEditText)
+    public void createNewSubGroup(final String theSubGroupNameEditText)
     {
         mFirebaseInstanceSub = FirebaseDatabase.getInstance();
         mFirebaseDatabaseSub = mFirebaseInstanceSub.getReference("SubGroup/"+mainGroupSelectedKey);
@@ -192,7 +220,53 @@ public class AddSubGroupAdmin extends AppCompatActivity implements View.OnClickL
         }
         else
         {
-            mFirebaseDatabaseSub.push().setValue(theSubGroupNameEditText.toLowerCase());
+            if (imageSubFlag==1)
+            {
+                final String subKey=mFirebaseDatabaseSub.push().getKey();
+                if (filePathSubAdmin!=null)
+                {
+                    final ProgressDialog progressDialog = new ProgressDialog(this);
+                    progressDialog.setTitle("Uploading");
+                    progressDialog.show();
+                    StorageReference sRefSubAdmin = mStorageRefMainAdmin.child("Images" + "." + "Sub"+"."+mainGroupSelectedKey+"."+subKey);
+                    sRefSubAdmin.putFile(filePathSubAdmin).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                        {
+                            @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                            progressDialog.dismiss();
+
+                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+
+                            Upload uploadSubAdmin = new Upload(theSubGroupNameEditText.toLowerCase(), downloadUrl.toString());
+
+                            mFirebaseDatabaseSub.child(subKey).setValue(uploadSubAdmin);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot)
+                        {
+                            @SuppressWarnings("VisibleForTests") long bytesTransfered= taskSnapshot.getBytesTransferred();
+                            @SuppressWarnings("VisibleForTests") long totalBytesTransfered= taskSnapshot.getTotalByteCount();
+                            double progress = (100.0 * bytesTransfered) / totalBytesTransfered;
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                        }
+                    });
+                }
+                Toast.makeText(this, "Sub Key : "+subKey, Toast.LENGTH_LONG).show();
+            }
+            else if (imageSubFlag==0)
+            {
+                Toast.makeText(this, "please select an image from gallery", Toast.LENGTH_LONG).show();
+            }
         }
 
     }
@@ -204,17 +278,17 @@ public class AddSubGroupAdmin extends AppCompatActivity implements View.OnClickL
         mFirebaseInstanceSub1 = FirebaseDatabase.getInstance();
         mFirebaseDatabaseSub1 = mFirebaseInstanceSub1.getReference("SubGroup/"+mainGroupSelectedKey);
 
-        FirebaseRecyclerAdapter<String,RecyclerSubGroupViewHolder> firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<String, RecyclerSubGroupViewHolder>(
-                String.class,
+        FirebaseRecyclerAdapter<Upload,RecyclerSubGroupViewHolder> firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<Upload, RecyclerSubGroupViewHolder>(
+                Upload.class,
                 R.layout.each_sub_element_admin,
                 RecyclerSubGroupViewHolder.class,
                 mFirebaseDatabaseSub1
         ) {
             @Override
-            protected void populateViewHolder(RecyclerSubGroupViewHolder viewHolder, String model, int position)
+            protected void populateViewHolder(RecyclerSubGroupViewHolder viewHolder, Upload model, int position)
             {
 
-                viewHolder.setMainGroupName(model);
+                viewHolder.setMainGroupName(model.getName(),model.getUrl());
 
             }
         };
@@ -248,10 +322,40 @@ public class AddSubGroupAdmin extends AppCompatActivity implements View.OnClickL
             mView=itemView;
         }
 
-        public void setMainGroupName(String mainGroupName)
+        public void setMainGroupName(String subGroupName,String subGroupImageUri)
         {
             TextView textView= (TextView) mView.findViewById(R.id.textViewSubGroupAdminRecyclerList);
-            textView.setText(mainGroupName);
+            ImageView imageView = (ImageView) mView.findViewById(R.id.imageViewSubGroupAdminRecyclerList);
+            textView.setText(subGroupName);
+            Glide.with(mView.getContext()).load(subGroupImageUri).into(imageView);
+        }
+    }
+
+    private void startImagesIntentSubAdmin()
+    {
+        Intent imagesIntent=new Intent();
+        imagesIntent.setType("image/*");
+        imagesIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(imagesIntent, "Select Picture"), PICK_IMAGE_REQUEST_SUB);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST_SUB && resultCode == RESULT_OK && data != null && data.getData() != null)
+        {
+            filePathSubAdmin = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePathSubAdmin);
+                subAdminImageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            imageSubFlag=1;
+        }
+        else
+        {
+            imageSubFlag=0;
         }
     }
 }

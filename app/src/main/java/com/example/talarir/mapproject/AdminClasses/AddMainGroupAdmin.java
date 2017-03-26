@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -42,7 +43,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
     private ImageView mainAdminImageView;
     private int imageMainFlag=0;
     private Uri filePathMainAdmin;
-    private static final int PICK_IMAGE_REQUEST = 100;
+    private static final int PICK_IMAGE_REQUEST_MAIN = 100;
 
     private Button saveToFireBaseButton,chooseImageMainAdminButton;
     private EditText theMainGroupNameEditText;
@@ -50,7 +51,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
 
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
-    private StorageReference mStorageRef;
+    private StorageReference mStorageRefMainAdmin;
 
     ValueEventListener x;
 
@@ -62,7 +63,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
 
         mFirebaseInstance = FirebaseDatabase.getInstance();
         mFirebaseDatabase = mFirebaseInstance.getReference("MainGroup");
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mStorageRefMainAdmin = FirebaseStorage.getInstance().getReference();
 
         mainAdminImageView = (ImageView) findViewById(R.id.imageViewMainAdmin);
         saveToFireBaseButton= (Button) findViewById(R.id.btnAddMainGroupAdmin);
@@ -71,7 +72,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
 
         recyclerMainView= (RecyclerView) findViewById(R.id.recyclerViewAdminMain);
         recyclerMainView.setHasFixedSize(true);
-        recyclerMainView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerMainView.setLayoutManager(new GridLayoutManager(this,2));
 
         saveToFireBaseButton.setOnClickListener(this);
         chooseImageMainAdminButton.setOnClickListener(this);
@@ -89,9 +90,16 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
 
         public void setMainGroupName(String mainGroupName,String mainGroupImageUri)
         {
-            TextView textView= (TextView) mView.findViewById(R.id.textViewMainGroupAdminRecyclerList);
+            final TextView textView= (TextView) mView.findViewById(R.id.textViewMainGroupAdminRecyclerList);
             ImageView imageView = (ImageView) mView.findViewById(R.id.imageViewMainGroupAdminRecyclerList);
             textView.setText(mainGroupName);
+            //Ravi, if u want customised onClickListeners, then go with this technique
+            /*textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mView.getContext(),"selected : "+textView.getText().toString(),Toast.LENGTH_SHORT).show();
+                }
+            });*/
             Glide.with(mView.getContext()).load(mainGroupImageUri).into(imageView);
         }
     }
@@ -159,7 +167,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
         }
         if (v.getId()==R.id.btnAddImageMainGroupAdmin)
         {
-            startImagesIntent();
+            startImagesIntentMainAdmin();
         }
     }
 
@@ -231,7 +239,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
                     final ProgressDialog progressDialog = new ProgressDialog(this);
                     progressDialog.setTitle("Uploading");
                     progressDialog.show();
-                    StorageReference sRef = mStorageRef.child("Images" + "." + "Main"+"."+ mainKey);
+                    StorageReference sRef = mStorageRefMainAdmin.child("Images" + "." + "Main"+"."+ mainKey);
                     sRef.putFile(filePathMainAdmin).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
@@ -242,9 +250,9 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
 
                             Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
 
-                            Upload upload = new Upload(theMainGroupNameEditText.toLowerCase(), downloadUrl.toString());
+                            Upload uploadMainAdmin = new Upload(theMainGroupNameEditText.toLowerCase(), downloadUrl.toString());
 
-                            mFirebaseDatabase.child(mainKey).setValue(upload);
+                            mFirebaseDatabase.child(mainKey).setValue(uploadMainAdmin);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -274,18 +282,18 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void startImagesIntent()
+    private void startImagesIntentMainAdmin()
     {
         Intent imagesIntent=new Intent();
         imagesIntent.setType("image/*");
         imagesIntent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(imagesIntent, "Select Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(imagesIntent, "Select Picture"), PICK_IMAGE_REQUEST_MAIN);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null)
+        if (requestCode == PICK_IMAGE_REQUEST_MAIN && resultCode == RESULT_OK && data != null && data.getData() != null)
         {
             filePathMainAdmin = data.getData();
             try {

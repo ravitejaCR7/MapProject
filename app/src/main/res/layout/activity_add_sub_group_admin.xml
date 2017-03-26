@@ -16,22 +16,37 @@
         android:orientation="horizontal"
         android:id="@+id/upperLinerLayoutSubAdmin">
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="104dp"
             android:layout_height="wrap_content"
             android:hint="enter sub group name"
             android:id="@+id/editTextSubGroup"
             />
-
         <Button
-            android:text="Add Sub"
+            android:layout_width="122dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAddImageSubGroupAdmin"
+            android:text="img" />
+        <Button
+            android:text="upload"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btnAddSubGroupAdmin" />
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/middleLinerLayoutSubAdmin"
         android:layout_width="match_parent"
         android:layout_below="@id/upperLinerLayoutSubAdmin"
+        android:layout_height="200dp"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageViewSubAdmin"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_below="@id/middleLinerLayoutSubAdmin"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
