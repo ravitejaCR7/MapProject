@@ -239,7 +239,7 @@ public class AddMainGroupAdmin extends AppCompatActivity implements View.OnClick
                     final ProgressDialog progressDialog = new ProgressDialog(this);
                     progressDialog.setTitle("Uploading");
                     progressDialog.show();
-                    StorageReference sRef = mStorageRefMainAdmin.child("Images" + "." + "Main"+"."+ mainKey);
+                    StorageReference sRef = mStorageRefMainAdmin.child("Images" + "/" + "Main"+"/"+ mainKey);
                     sRef.putFile(filePathMainAdmin).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)

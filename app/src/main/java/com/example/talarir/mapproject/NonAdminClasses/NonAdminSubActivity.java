@@ -4,15 +4,19 @@ import android.content.Intent;
 import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.talarir.mapproject.AdminClasses.RecyclerItemClickListener;
 import com.example.talarir.mapproject.LoginActivity;
 import com.example.talarir.mapproject.R;
+import com.example.talarir.mapproject.Upload;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,18 +26,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class NonAdminSubActivity extends AppCompatActivity implements SubDialogToActivityInterface
 {
 
-    RecyclerView rec;
+    private RecyclerView rec;
 
     private String mainGroupSelected;
     private static String mainGroupSelectedKey,subGroupSelectedKey;
 
     private ValueEventListener xMain,xSub1,xSub,xSubscription;
 
-    FirebaseUser user;
+    private FirebaseUser user;
 
     private DatabaseReference mFirebaseDatabaseNonAdminMain;
     private FirebaseDatabase mFirebaseInstanceNonAdminMain;
@@ -52,6 +58,8 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
 
     private DatabaseReference mFirebaseDatabaseSubscriptionAddition;
     private FirebaseDatabase mFirebaseInstanceSubscriptionAddition;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,7 +85,8 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
             {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
-                    if (mainGroupSelected.equals(dataSnapshot1.getValue()))
+                    Upload retrievingSubUploadObject = dataSnapshot1.getValue(Upload.class);
+                    if (mainGroupSelected.equals(retrievingSubUploadObject.getName()))
                     {
                         //Toast.makeText(getApplicationContext(),"key : "+dataSnapshot1.getKey()+"   value : "+dataSnapshot1.getValue(),Toast.LENGTH_SHORT).show();
                         mainGroupSelectedKey=dataSnapshot1.getKey();
@@ -109,7 +118,8 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
 
                    for (DataSnapshot list : dataSnapshot.getChildren())
                    {
-                       if (subViewSelectedString.equals(list.getValue()))
+                       Upload u = list.getValue(Upload.class);
+                       if (subViewSelectedString.equals(u.getName()))
                        {
                            subGroupSelectedKey=list.getKey();
                        }
@@ -135,17 +145,17 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
         mFirebaseInstanceSub1 = FirebaseDatabase.getInstance();
         mFirebaseDatabaseSub1 = mFirebaseInstanceSub1.getReference("SubGroup/"+mainGroupSelectedKey);
 
-        FirebaseRecyclerAdapter<String,RecyclerSubGroupViewHolder> firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<String, RecyclerSubGroupViewHolder>(
-                String.class,
+        FirebaseRecyclerAdapter<Upload,RecyclerSubGroupViewHolder> firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<Upload, RecyclerSubGroupViewHolder>(
+                Upload.class,
                 R.layout.each_sub_element_admin,
                 RecyclerSubGroupViewHolder.class,
                 mFirebaseDatabaseSub1
         ) {
             @Override
-            protected void populateViewHolder(RecyclerSubGroupViewHolder viewHolder, String model, int position)
+            protected void populateViewHolder(RecyclerSubGroupViewHolder viewHolder, Upload  model, int position)
             {
 
-                viewHolder.setMainGroupName(model);
+                viewHolder.setMainGroupName(model.getName(),model.getUrl());
 
             }
         };
@@ -303,10 +313,12 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
             mView=itemView;
         }
 
-        public void setMainGroupName(String mainGroupName)
+        public void setMainGroupName(String subGroupName,String subGroupImageUri)
         {
             TextView textView= (TextView) mView.findViewById(R.id.textViewSubGroupAdminRecyclerList);
-            textView.setText(mainGroupName);
+            ImageView imageView = (ImageView) mView.findViewById(R.id.imageViewSubGroupAdminRecyclerList);
+            textView.setText(subGroupName);
+            Glide.with(mView.getContext()).load(subGroupImageUri).into(imageView);
         }
     }
 
@@ -333,7 +345,7 @@ public class NonAdminSubActivity extends AppCompatActivity implements SubDialogT
     {
         rec= (RecyclerView) findViewById(R.id.subNonAdminRecycler);
         rec.setHasFixedSize(true);
-        rec.setLayoutManager(new LinearLayoutManager(this));
+        rec.setLayoutManager(new GridLayoutManager(this,2));
     }
 
     @Override

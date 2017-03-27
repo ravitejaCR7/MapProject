@@ -12,20 +12,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.talarir.mapproject.AdminClasses.RecyclerItemClickListener;
 import com.example.talarir.mapproject.NonAdminClasses.NonAdminSubActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageReference;
 
 public class NonAdminACtivity extends AppCompatActivity
 {
@@ -34,7 +38,7 @@ public class NonAdminACtivity extends AppCompatActivity
 
     private DatabaseReference mFirebaseDatabaseNonAdmin;
     private FirebaseDatabase mFirebaseInstanceNonAdmin;
-
+    private StorageReference mStorageRefMainAdmin;
 
     private DrawerLayout mDrawerLayout;
 
@@ -104,24 +108,24 @@ public class NonAdminACtivity extends AppCompatActivity
     {
         nonAdminMainRecyclerView= (RecyclerView) findViewById(R.id.recyclerViewNonAdminMain);
         nonAdminMainRecyclerView.setHasFixedSize(true);
-        nonAdminMainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        nonAdminMainRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        FirebaseRecyclerAdapter<String,RecyclerMainGroupViewHolder> firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<String, RecyclerMainGroupViewHolder>(
-                String.class,
+        FirebaseRecyclerAdapter<Upload,RecyclerMainGroupViewHolder> firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<Upload, RecyclerMainGroupViewHolder>(
+                Upload.class,
                 R.layout.each_main_element_admin,
                 RecyclerMainGroupViewHolder.class,
                 mFirebaseDatabaseNonAdmin
         ) {
             @Override
-            protected void populateViewHolder(RecyclerMainGroupViewHolder viewHolder, String model, int position)
+            protected void populateViewHolder(RecyclerMainGroupViewHolder viewHolder, Upload model, int position)
             {
 
-                viewHolder.setMainGroupName(model);
+                viewHolder.setMainGroupName(model.getName(),model.getUrl());
 
             }
         };
@@ -159,10 +163,12 @@ public class NonAdminACtivity extends AppCompatActivity
             mView=itemView;
         }
 
-        public void setMainGroupName(String mainGroupName)
+        public void setMainGroupName(String mainGroupName,String mainGroupImageUri)
         {
             TextView textView= (TextView) mView.findViewById(R.id.textViewMainGroupAdminRecyclerList);
+            ImageView imageView = (ImageView) mView.findViewById(R.id.imageViewMainGroupAdminRecyclerList);
             textView.setText(mainGroupName);
+            Glide.with(mView.getContext()).load(mainGroupImageUri).into(imageView);
         }
     }
 

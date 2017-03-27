@@ -189,11 +189,13 @@ public class MapActivty extends AppCompatActivity implements
                 case 1:
                     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     {
+
                         // Permission Granted
                         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                         {
                             //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                             askForGPS();
+                            recreate();
                         }
                         startLocationUpdates();
                     }
@@ -418,11 +420,12 @@ public class MapActivty extends AppCompatActivity implements
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MapActivty.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MapActivty.this, Manifest.permission.ACCESS_FINE_LOCATION))
+            {
                 ActivityCompat.requestPermissions(MapActivty.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
-            } else {
+            } else
+            {
                 ActivityCompat.requestPermissions(MapActivty.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
 

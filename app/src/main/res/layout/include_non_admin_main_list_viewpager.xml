@@ -58,6 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:background="#FAFAFA"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
@@ -73,7 +74,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
+        android:scaleType="center"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_floation_add" />
+        android:src="@drawable/ic_fab" />
 
 </android.support.design.widget.CoordinatorLayout>

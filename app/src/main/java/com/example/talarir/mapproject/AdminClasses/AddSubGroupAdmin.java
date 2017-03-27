@@ -228,7 +228,7 @@ public class AddSubGroupAdmin extends AppCompatActivity implements View.OnClickL
                     final ProgressDialog progressDialog = new ProgressDialog(this);
                     progressDialog.setTitle("Uploading");
                     progressDialog.show();
-                    StorageReference sRefSubAdmin = mStorageRefMainAdmin.child("Images" + "." + "Sub"+"."+mainGroupSelectedKey+"."+subKey);
+                    StorageReference sRefSubAdmin = mStorageRefMainAdmin.child("Images" + "/" + "Sub"+"/"+mainGroupSelectedKey+"/"+subKey);
                     sRefSubAdmin.putFile(filePathSubAdmin).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
