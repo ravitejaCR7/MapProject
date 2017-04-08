@@ -1,4 +1,4 @@
-package com.example.talarir.mapproject.AdminClasses;
+package ravi.teja.talarir.mapproject.AdminClasses;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -19,8 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.talarir.mapproject.R;
-import com.example.talarir.mapproject.Upload;
+import ravi.teja.talarir.mapproject.R;
+import ravi.teja.talarir.mapproject.Upload;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

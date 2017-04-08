@@ -74,8 +74,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:scaleType="center"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_fab" />
+        android:scaleType="center"
+        android:src="@drawable/ic_fab"
+        app:backgroundTint="@color/colorPrimary"
+        app:rippleColor="@color/cardview_light_background" />
 
 </android.support.design.widget.CoordinatorLayout>

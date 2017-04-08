@@ -1,4 +1,4 @@
-package com.example.talarir.mapproject.NonAdminClasses;
+package ravi.teja.talarir.mapproject.NonAdminClasses;
 
 /**
  * Created by talarir on 14/03/2017.

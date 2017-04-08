@@ -1,31 +1,30 @@
-package com.example.talarir.mapproject;
+package ravi.teja.talarir.mapproject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.talarir.mapproject.AdminClasses.RecyclerItemClickListener;
-import com.example.talarir.mapproject.NonAdminClasses.NonAdminSubActivity;
+import ravi.teja.talarir.mapproject.AdminClasses.RecyclerItemClickListener;
+import ravi.teja.talarir.mapproject.NonAdminClasses.NonAdminSubActivity;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,6 +32,8 @@ import com.google.firebase.storage.StorageReference;
 
 public class NonAdminACtivity extends AppCompatActivity
 {
+    public int counter=0;
+    private ProgressDialog progressDialog;
 
     RecyclerView nonAdminMainRecyclerView;
 
@@ -80,7 +81,7 @@ public class NonAdminACtivity extends AppCompatActivity
             }
         });
 
-        initializeView();
+        initializeViewPortrait();
         //calls to recycler list
     }
 
@@ -104,7 +105,7 @@ public class NonAdminACtivity extends AppCompatActivity
                 });
     }
 
-    private void initializeView()
+    private void initializeViewPortrait()
     {
         nonAdminMainRecyclerView= (RecyclerView) findViewById(R.id.recyclerViewNonAdminMain);
         nonAdminMainRecyclerView.setHasFixedSize(true);
@@ -112,8 +113,11 @@ public class NonAdminACtivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
+
+        showProgressBar();
 
         FirebaseRecyclerAdapter<Upload,RecyclerMainGroupViewHolder> firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<Upload, RecyclerMainGroupViewHolder>(
                 Upload.class,
@@ -126,11 +130,29 @@ public class NonAdminACtivity extends AppCompatActivity
             {
 
                 viewHolder.setMainGroupName(model.getName(),model.getUrl());
-
             }
+
+
         };
 
         nonAdminMainRecyclerView.setAdapter(firebaseRecyclerAdapter);
+
+        nonAdminMainRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.d("counter","counter = "+counter++);
+                if (counter>=3)
+                {
+                    cancelProgressBar();
+                    nonAdminMainRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            }
+
+        });
+
+
+
+
 
         nonAdminMainRecyclerView.addOnItemTouchListener
                 (
@@ -155,6 +177,8 @@ public class NonAdminACtivity extends AppCompatActivity
 
     }
 
+
+
     public static class RecyclerMainGroupViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
@@ -172,4 +196,25 @@ public class NonAdminACtivity extends AppCompatActivity
         }
     }
 
+
+    public void showProgressBar()
+    {
+        progressDialog = new ProgressDialog(NonAdminACtivity.this,
+                R.style.MyTheme);
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+        progressDialog.setMessage("Please wait :) ");
+        progressDialog.show();
+
+    }
+
+
+    public void cancelProgressBar()
+    {
+        progressDialog.dismiss();
+
+    }
+
 }
+
+

@@ -1,4 +1,4 @@
-package com.example.talarir.mapproject.AdminClasses;
+package ravi.teja.talarir.mapproject.AdminClasses;
 
 import android.app.DialogFragment;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.talarir.mapproject.R;
+import ravi.teja.talarir.mapproject.R;
 
 /**
  * Created by talarir on 24/02/2017.

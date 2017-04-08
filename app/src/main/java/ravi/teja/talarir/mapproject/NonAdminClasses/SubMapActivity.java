@@ -1,22 +1,9 @@
-package com.example.talarir.mapproject.NonAdminClasses;
+package ravi.teja.talarir.mapproject.NonAdminClasses;
 
-import android.Manifest;
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.talarir.mapproject.R;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
+import ravi.teja.talarir.mapproject.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;

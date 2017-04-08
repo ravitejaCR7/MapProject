@@ -1,4 +1,4 @@
-package com.example.talarir.mapproject;
+package ravi.teja.talarir.mapproject;
 
 /**
  * Created by talarir on 24/03/2017.

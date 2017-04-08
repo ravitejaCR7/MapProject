@@ -1,4 +1,4 @@
-package com.example.talarir.mapproject.AdminClasses;
+package ravi.teja.talarir.mapproject.AdminClasses;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

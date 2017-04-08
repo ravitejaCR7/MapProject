@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion '25.0.1'
     defaultConfig {
-        applicationId "com.example.talarir.mapproject"
+        applicationId "ravi.teja.talarir.mapproject"
         minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
@@ -44,6 +44,7 @@ dependencies {
     compile 'com.google.firebase:firebase-storage:10.0.1'
     compile 'com.firebaseui:firebase-ui-storage:1.2.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.google.firebase:firebase-core:10.0.1'
 
     testCompile 'junit:junit:4.12'
 }

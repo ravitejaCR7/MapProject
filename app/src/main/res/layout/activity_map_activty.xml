@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.talarir.mapproject.NonAdminClasses.MapActivty">
+    tools:context="ravi.teja.talarir.mapproject.NonAdminClasses.MapActivty">
 
     <Button
         android:id="@+id/buttonSaveLocationNonAdmin"

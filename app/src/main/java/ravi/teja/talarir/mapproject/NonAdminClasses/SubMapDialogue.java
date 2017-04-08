@@ -1,4 +1,4 @@
-package com.example.talarir.mapproject.NonAdminClasses;
+package ravi.teja.talarir.mapproject.NonAdminClasses;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.talarir.mapproject.R;
+import ravi.teja.talarir.mapproject.R;
 
 /**
  * Created by talarir on 14/03/2017.

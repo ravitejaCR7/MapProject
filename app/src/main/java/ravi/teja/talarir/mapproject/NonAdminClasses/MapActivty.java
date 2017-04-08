@@ -1,4 +1,4 @@
-package com.example.talarir.mapproject.NonAdminClasses;
+package ravi.teja.talarir.mapproject.NonAdminClasses;
 
 
 import android.Manifest;
@@ -15,10 +15,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.talarir.mapproject.R;
+import ravi.teja.talarir.mapproject.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;

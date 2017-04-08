@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     android:background="#F5F5F5"
     android:padding="10dp"
-    tools:context="com.example.talarir.mapproject.SignupActivity">
+    tools:context="ravi.teja.talarir.mapproject.SignupActivity">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

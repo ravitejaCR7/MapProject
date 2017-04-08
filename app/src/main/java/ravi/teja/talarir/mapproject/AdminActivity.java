@@ -1,4 +1,4 @@
-package com.example.talarir.mapproject;
+package ravi.teja.talarir.mapproject;
 
 
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
-import com.example.talarir.mapproject.AdminClasses.AddMainGroupAdmin;
+import ravi.teja.talarir.mapproject.AdminClasses.AddMainGroupAdmin;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,7 +26,7 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin);
+        setContentView(ravi.teja.talarir.mapproject.R.layout.activity_admin);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -57,7 +57,7 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
 
     private void initializeButton()
     {
-        buttonSaveMainGroup= (Button) findViewById(R.id.addMainGroupAdmin);
+        buttonSaveMainGroup= (Button) findViewById(ravi.teja.talarir.mapproject.R.id.addMainGroupAdmin);
 
         buttonSaveMainGroup.setOnClickListener(this);
 
@@ -88,7 +88,7 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v)
     {
-        if (v.getId()==R.id.addMainGroupAdmin)
+        if (v.getId()== ravi.teja.talarir.mapproject.R.id.addMainGroupAdmin)
         {
             startActivity(new Intent(this, AddMainGroupAdmin.class));
         }

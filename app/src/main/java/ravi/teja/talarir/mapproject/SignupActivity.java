@@ -1,4 +1,4 @@
-package com.example.talarir.mapproject;
+package ravi.teja.talarir.mapproject;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
