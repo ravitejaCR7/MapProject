@@ -63,6 +63,58 @@
                     android:id="@+id/editTextSignUpPassword" />
             </android.support.design.widget.TextInputLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Gender"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textSize="27dp"/>
+
+            <RadioGroup
+                android:id="@+id/radioSex"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
+
+                <RadioButton
+                    android:id="@+id/radioMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="male"
+                    android:checked="true"/>
+
+                <RadioButton
+                    android:id="@+id/radioFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="female" />
+
+                <RadioButton
+                    android:id="@+id/radioNone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Others" />
+
+            </RadioGroup>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/datePickerSignUpActivityBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:padding="12dp"
+                android:text="Date Picker"
+                android:onClick="showDatePickerDialog"/>
+
+
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/registerSignUpActivityBtn"
                 android:layout_width="fill_parent"

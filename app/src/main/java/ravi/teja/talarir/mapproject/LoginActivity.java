@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Welcome to SignUpActivity",
                         Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), SignupActivity.class));
+                overridePendingTransition(R.anim.push_down_in, R.anim.push_down_out);
                 finish();
             }
         });
@@ -103,11 +104,13 @@ public class LoginActivity extends AppCompatActivity {
                                     if(email.equals("ravi@gmail.com"))
                                     {
                                         Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
+                                        overridePendingTransition(R.anim.push_down_in, R.anim.push_down_out);
                                         startActivity(intent);
                                     }
                                     else
                                     {
                                         Intent intent = new Intent(getApplicationContext(), NonAdminACtivity.class);
+                                        overridePendingTransition(R.anim.push_down_in, R.anim.push_down_out);
                                         startActivity(intent);
                                     }
 
