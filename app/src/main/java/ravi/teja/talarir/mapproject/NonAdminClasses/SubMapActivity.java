@@ -40,7 +40,8 @@ public class SubMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private ArrayList<String> userIdsList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_map);
         mainKey = getIntent().getStringExtra("MainGroupIntentString");

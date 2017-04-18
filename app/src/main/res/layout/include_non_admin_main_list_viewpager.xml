@@ -53,7 +53,7 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/activity_non_admin_activity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -68,7 +68,16 @@
             android:scrollbars="vertical"
             android:id="@+id/recyclerViewNonAdminMain" />
     </RelativeLayout>
-
+    -->
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragmentContainer"
+        android:clipToPadding="false"
+        android:background="#FAFAFA"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"></FrameLayout>
+    
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -76,7 +85,7 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
         android:scaleType="center"
-        android:src="@drawable/ic_fab"
+        android:src="@drawable/ic_person_pin_circle_black_24dp"
         app:backgroundTint="@color/colorPrimary"
         app:rippleColor="@color/cardview_light_background" />
 

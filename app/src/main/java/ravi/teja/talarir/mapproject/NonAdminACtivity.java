@@ -1,13 +1,17 @@
 package ravi.teja.talarir.mapproject;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +27,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import ravi.teja.talarir.mapproject.AdminClasses.RecyclerItemClickListener;
+import ravi.teja.talarir.mapproject.NonAdminClasses.Fragments.MainListFragmentNonAdmin;
+import ravi.teja.talarir.mapproject.NonAdminClasses.Interfaces.MainListInterface;
 import ravi.teja.talarir.mapproject.NonAdminClasses.NonAdminSubActivity;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -30,18 +36,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 
-public class NonAdminACtivity extends AppCompatActivity
+public class NonAdminACtivity extends AppCompatActivity implements MainListInterface
 {
-    public int counter=0;
     private ProgressDialog progressDialog;
 
-    RecyclerView nonAdminMainRecyclerView;
-
-    private DatabaseReference mFirebaseDatabaseNonAdmin;
-    private FirebaseDatabase mFirebaseInstanceNonAdmin;
-    private StorageReference mStorageRefMainAdmin;
-
     private DrawerLayout mDrawerLayout;
+    private Toolbar toolbar;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -51,10 +51,7 @@ public class NonAdminACtivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_non_admin_activity);
 
-        mFirebaseInstanceNonAdmin = FirebaseDatabase.getInstance();
-        mFirebaseDatabaseNonAdmin = mFirebaseInstanceNonAdmin.getReference("MainGroup");
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         final ActionBar ab = getSupportActionBar();
@@ -62,6 +59,8 @@ public class NonAdminACtivity extends AppCompatActivity
         ab.setDisplayHomeAsUpEnabled(true);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // initializing navigation menu
+        setUpNavigationView();
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarFunctions();
@@ -81,8 +80,30 @@ public class NonAdminACtivity extends AppCompatActivity
             }
         });
 
-        initializeViewPortrait();
-        //calls to recycler list
+    }
+
+    private void setUpNavigationView()
+    {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        //Setting the actionbaractionbarToggle to drawer layout
+        mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
+
+        //calling sync state is necessary or else your hamburger icon wont show up
+        actionBarDrawerToggle.syncState();
     }
 
     private void collapsingToolbarFunctions()
@@ -94,108 +115,54 @@ public class NonAdminACtivity extends AppCompatActivity
 
     private void setupDrawerContent(NavigationView navigationView)
     {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
-                        return true;
-                    }
-                });
-    }
+        navigationView.setNavigationItemSelectedListener
+                (
+                    new NavigationView.OnNavigationItemSelectedListener()
+                    {
+                        @Override
+                        public boolean onNavigationItemSelected(MenuItem menuItem)
+                        {
+                            switch (menuItem.getItemId()) {
+                                //Replacing the main content with ContentFragment Which is our Inbox View;
+                                case R.id.nav_home:
+                                    Toast.makeText(getApplicationContext(),"home",Toast.LENGTH_SHORT).show();
+                                    break;
+                                case R.id.nav_profile:
+                                    Toast.makeText(getApplicationContext(),"profile",Toast.LENGTH_SHORT).show();
+                                    break;
+                                case R.id.nav_logout:
+                                    Toast.makeText(getApplicationContext(),"logout",Toast.LENGTH_SHORT).show();
+                                    break;
+                                default:
+                                    Toast.makeText(getApplicationContext(),"home",Toast.LENGTH_SHORT).show();
+                            }
 
-    private void initializeViewPortrait()
-    {
-        nonAdminMainRecyclerView= (RecyclerView) findViewById(R.id.recyclerViewNonAdminMain);
-        nonAdminMainRecyclerView.setHasFixedSize(true);
-        nonAdminMainRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+                            //Checking if the item is in checked state or not, if not make it in checked state
+                            if (menuItem.isChecked()) {
+                                menuItem.setChecked(false);
+                            } else {
+                                menuItem.setChecked(true);
+                            }
+                            menuItem.setChecked(true);
+
+
+                            return true;
+                        }
+                    }
+                );
     }
 
     @Override
     protected void onStart()
     {
         super.onStart();
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
 
-        showProgressBar();
-
-        FirebaseRecyclerAdapter<Upload,RecyclerMainGroupViewHolder> firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<Upload, RecyclerMainGroupViewHolder>(
-                Upload.class,
-                R.layout.each_main_element_admin,
-                RecyclerMainGroupViewHolder.class,
-                mFirebaseDatabaseNonAdmin
-        ) {
-            @Override
-            protected void populateViewHolder(RecyclerMainGroupViewHolder viewHolder, Upload model, int position)
-            {
-
-                viewHolder.setMainGroupName(model.getName(),model.getUrl());
-            }
-
-
-        };
-
-        nonAdminMainRecyclerView.setAdapter(firebaseRecyclerAdapter);
-
-        nonAdminMainRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Log.d("counter","counter = "+counter++);
-                if (counter>=3)
-                {
-                    cancelProgressBar();
-                    nonAdminMainRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            }
-
-        });
-
-
-
-
-
-        nonAdminMainRecyclerView.addOnItemTouchListener
-                (
-                        new RecyclerItemClickListener(getApplicationContext(), nonAdminMainRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                            @Override public void onItemClick(View view, int position)
-                            {
-                                // do whatever
-                                TextView tv = (TextView) view.findViewById(R.id.textViewMainGroupAdminRecyclerList);
-                                Toast.makeText(getApplicationContext(),"simple "+tv.getText().toString(),Toast.LENGTH_SHORT).show();
-                                Intent subCategoryIntent= new Intent(getApplicationContext(),NonAdminSubActivity.class);
-                                subCategoryIntent.putExtra("MainSelectedStringNonActivity",tv.getText().toString());
-                                startActivity(subCategoryIntent);
-                            }
-
-                            @Override public void onLongItemClick(View view, int position)
-                            {
-                                // do whatever
-                                Toast.makeText(getApplicationContext(),"long",Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                );
-
+        MainListFragmentNonAdmin mainList= new MainListFragmentNonAdmin();
+        ft.replace(R.id.fragmentContainer, mainList);
+        ft.commit();
     }
-
-
-
-    public static class RecyclerMainGroupViewHolder extends RecyclerView.ViewHolder
-    {
-        View mView;
-        public RecyclerMainGroupViewHolder(View itemView) {
-            super(itemView);
-            mView=itemView;
-        }
-
-        public void setMainGroupName(String mainGroupName,String mainGroupImageUri)
-        {
-            TextView textView= (TextView) mView.findViewById(R.id.textViewMainGroupAdminRecyclerList);
-            ImageView imageView = (ImageView) mView.findViewById(R.id.imageViewMainGroupAdminRecyclerList);
-            textView.setText(mainGroupName);
-            Glide.with(mView.getContext()).load(mainGroupImageUri).into(imageView);
-        }
-    }
-
 
     public void showProgressBar()
     {
@@ -214,6 +181,16 @@ public class NonAdminACtivity extends AppCompatActivity
         progressDialog.dismiss();
 
     }
+
+//    @Override
+//    public void onBackPressed()
+//    {
+//        if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
+//        {
+//            mDrawerLayout.closeDrawers();
+//            return;
+//        }
+//    }
 
 }
 
