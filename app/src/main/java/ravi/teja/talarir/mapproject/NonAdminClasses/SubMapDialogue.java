@@ -57,7 +57,8 @@ public class SubMapDialogue extends DialogFragment implements View.OnClickListen
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(Context context)
+    {
         super.onAttach(context);
         interfaceObject=(SubDialogToActivityInterface) getParentFragment();
     }
