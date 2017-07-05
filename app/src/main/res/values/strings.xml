@@ -8,4 +8,8 @@
 
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
+    <string name="server_client_id">397187882359-eaug7m52kl53h14heuj9nkuq4n9p8jlf.apps.googleusercontent.com</string>
+    <string name="server_client_secret">Q15ex6EzwbajdUFc2Vh3mMI8</string>
+    <string name="default_web_client_id1">397187882359-eaug7m52kl53h14heuj9nkuq4n9p8jlf.apps.googleusercontent.com</string>
+    <string name="client_id_real">397187882359-569c0ascipn12mcd90mfvrrd3fidpc0c.apps.googleusercontent.com</string>
 </resources>

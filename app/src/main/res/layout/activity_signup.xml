@@ -21,7 +21,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="56dp"
+            android:paddingTop="26dp"
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
             android:background="#FFFFFF"
@@ -29,12 +29,26 @@
             android:focusable="true"
             android:focusableInTouchMode="true">
 
-            <ImageView android:src="@drawable/ead_logo_material"
-                android:layout_width="wrap_content"
-                android:layout_height="72dp"
-                android:layout_marginBottom="24dp"
-                android:layout_gravity="center_horizontal" />
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:id="@+id/signUp_imageView"
+                android:src="@drawable/ic_add_a_photo_sign_up_image"
+                android:background="#ECEFF1"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:hint="UserName"
+                    android:id="@+id/editTextSignUpUserName" />
+            </android.support.design.widget.TextInputLayout>
             <!-- Email Label -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -69,7 +83,7 @@
                 android:text="Select Gender"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:textSize="27dp"/>
+                android:textSize="25sp"/>
 
             <RadioGroup
                 android:id="@+id/radioSex"
@@ -78,28 +92,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp">
-
-                <RadioButton
-                    android:id="@+id/radioMale"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="male"
-                    android:checked="true"/>
-
-                <RadioButton
-                    android:id="@+id/radioFemale"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="female" />
-
-                <RadioButton
-                    android:id="@+id/radioNone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Others" />
-
+                android:layout_gravity="center_horizontal">
+                        <RadioButton
+                            android:id="@+id/radioMale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="23sp"
+                            android:text="M"
+                            android:padding="7dp"
+                            android:checked="true"
+                            android:layout_marginLeft="16dp"/>
+                        <RadioButton
+                            android:id="@+id/radioFemale"
+                            android:layout_width="wrap_content"
+                            android:textSize="23sp"
+                            android:padding="7dp"
+                            android:layout_height="wrap_content"
+                            android:text="F" />
+                        <RadioButton
+                            android:id="@+id/radioNone"
+                            android:layout_width="wrap_content"
+                            android:textSize="20sp"
+                            android:padding="7dp"
+                            android:layout_height="wrap_content"
+                            android:text="Others" />
             </RadioGroup>
 
             <android.support.v7.widget.AppCompatButton
@@ -111,7 +127,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
                 android:padding="12dp"
-                android:text="Date Picker"
+                android:text="D . O . B"
                 android:onClick="showDatePickerDialog"/>
 
 

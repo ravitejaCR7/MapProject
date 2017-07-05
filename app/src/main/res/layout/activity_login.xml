@@ -20,7 +20,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="56dp"
+            android:paddingTop="36dp"
             android:paddingLeft="24dp"
             android:background="#FFFFFF"
             android:paddingRight="24dp"
@@ -71,6 +71,13 @@
                 android:padding="12dp"
                 android:text="Login"/>
 
+            <com.google.android.gms.common.SignInButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="24dp"
+                android:id="@+id/googleSignInButton">
+            </com.google.android.gms.common.SignInButton>
             <Button
                 android:text="No account yet? Create one"
                 android:layout_width="fill_parent"

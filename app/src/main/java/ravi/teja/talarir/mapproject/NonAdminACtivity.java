@@ -4,41 +4,53 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.bumptech.glide.Glide;
-import ravi.teja.talarir.mapproject.AdminClasses.RecyclerItemClickListener;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.firebase.auth.FirebaseAuth;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import ravi.teja.talarir.mapproject.NonAdminClasses.Fragments.MainListFragmentNonAdmin;
 import ravi.teja.talarir.mapproject.NonAdminClasses.Interfaces.MainListInterface;
-import ravi.teja.talarir.mapproject.NonAdminClasses.NonAdminSubActivity;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.StorageReference;
 
-public class NonAdminACtivity extends AppCompatActivity implements MainListInterface
+
+public class NonAdminACtivity extends AppCompatActivity implements
+        MainListInterface,
+        GoogleApiClient.OnConnectionFailedListener
 {
+    private String uName,uEmail,uLastName,uPhoto;
+    private static final String TAG = "GoogleActivity";
+
+
     private ProgressDialog progressDialog;
+
+    private FirebaseAuth mAuth;
+    private GoogleApiClient mGoogleApiClient;
 
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
@@ -50,6 +62,24 @@ public class NonAdminACtivity extends AppCompatActivity implements MainListInter
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_non_admin_activity);
+
+        BasicUserInfoParcelable basicUserInfoParcelable = getIntent().getParcelableExtra("userInfoFromLoginActivity");
+
+        unBoxTheDetails(basicUserInfoParcelable);
+
+        mAuth = FirebaseAuth.getInstance();
+        // [START config_signin]
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        // [END config_signin]
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,6 +111,18 @@ public class NonAdminACtivity extends AppCompatActivity implements MainListInter
         });
 
     }
+
+    private void unBoxTheDetails(BasicUserInfoParcelable basicUserInfoParcelable)
+    {
+        if (basicUserInfoParcelable!=null)
+        {
+            uName = basicUserInfoParcelable.fullName;
+            uEmail = basicUserInfoParcelable.emailId;
+            uLastName = basicUserInfoParcelable.lastName;
+            uPhoto = basicUserInfoParcelable.userPhoto;
+        }
+    }
+
 
     private void setUpNavigationView()
     {
@@ -115,6 +157,18 @@ public class NonAdminACtivity extends AppCompatActivity implements MainListInter
 
     private void setupDrawerContent(NavigationView navigationView)
     {
+        View navHeaderView= navigationView.getHeaderView(0);
+        TextView navHeaderEmail= (TextView) navHeaderView.findViewById(R.id.nav_header_email);
+        TextView navHeaderName = (TextView) navHeaderView.findViewById(R.id.nav_header_name);
+        CircleImageView navHeaderImage = (CircleImageView) navHeaderView.findViewById(R.id.img_profile);
+
+        navHeaderEmail.setText(uEmail);
+        navHeaderName.setText(uName);
+        if (uPhoto.length()>0)
+        {
+            Glide.with(getApplicationContext()).load(Uri.parse(uPhoto)).into(navHeaderImage);
+        }
+
         navigationView.setNavigationItemSelectedListener
                 (
                     new NavigationView.OnNavigationItemSelectedListener()
@@ -131,7 +185,18 @@ public class NonAdminACtivity extends AppCompatActivity implements MainListInter
                                     Toast.makeText(getApplicationContext(),"profile",Toast.LENGTH_SHORT).show();
                                     break;
                                 case R.id.nav_logout:
-                                    Toast.makeText(getApplicationContext(),"logout",Toast.LENGTH_SHORT).show();
+                                    mAuth.signOut();
+
+                                    // Google sign out
+                                    Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                                            new ResultCallback<Status>() {
+                                                @Override
+                                                public void onResult(@NonNull Status status)
+                                                {
+                                                    Toast.makeText(getApplicationContext(),"logout",Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
                                     break;
                                 default:
                                     Toast.makeText(getApplicationContext(),"home",Toast.LENGTH_SHORT).show();
@@ -145,7 +210,6 @@ public class NonAdminACtivity extends AppCompatActivity implements MainListInter
                             }
                             menuItem.setChecked(true);
 
-
                             return true;
                         }
                     }
@@ -156,6 +220,7 @@ public class NonAdminACtivity extends AppCompatActivity implements MainListInter
     protected void onStart()
     {
         super.onStart();
+//        Log.d("ravi start","user id is :"+ FirebaseAuth.getInstance().getCurrentUser().getUid());
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
@@ -172,7 +237,6 @@ public class NonAdminACtivity extends AppCompatActivity implements MainListInter
         progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
         progressDialog.setMessage("Please wait :) ");
         progressDialog.show();
-
     }
 
 
@@ -180,6 +244,13 @@ public class NonAdminACtivity extends AppCompatActivity implements MainListInter
     {
         progressDialog.dismiss();
 
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
 //    @Override

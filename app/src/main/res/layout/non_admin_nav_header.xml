@@ -28,12 +28,22 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_profile"
-            android:layout_width="@dimen/profile_width"
-            android:layout_height="@dimen/profile_height"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             android:src="@drawable/messi"
-            app:civ_border_color="#FF000000"
-            app:civ_border_width="2dp"
+            app:civ_border_color="#CFD8DC"
+            app:civ_border_width="1dp"
             app:srcCompat="@drawable/messi" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nav_header_name"
+            android:textColor="#FF000000"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nav_header_email"
+            android:textColor="@color/cardview_dark_background"/>
     </LinearLayout>
 </RelativeLayout>
